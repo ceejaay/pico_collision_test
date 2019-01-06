@@ -3,51 +3,60 @@ version 16
 __lua__
 --print('hello world')
 
+box = {}
+
+box.sprite = 0
+box.x = 0
+box.y = 0
 
 
-box_x = 0
-box_y = 0
-sprite = 0
+
+--box_x = 0
+--box_y = 0
+--sprite = 0
 map_x = 0
 map_y = 0
 
 
-function check_location(x, y)
-  if mget(map_x, map_y) == 4 or mget(map_x, map_y) == 1
-   then sprite = 3 
-  elseif mget(box_x, box_y) == 0
-   then sprite = 0
+function move_actor(actor)
+  if btnp(0)
+    then actor.x -= 8
+  end
+  if btnp(1)
+    then actor.x += 8
+  end
+  if btnp(2)
+    then actor.y -= 8
+  end
+  if btnp(3)
+    then actor.y += 8
   end
 end
+
+
+function check_location(actor)
+  local x = actor.x / 8
+  local y = actor.y / 8
+  --here we put in the collision logic
+  if mget(x + 1, y + 1) == 4
+    then actor.sprite = 3
+  end
+end
+
 function _draw()
  cls()
  map(0, 0, 0, 0, 16, 16)
- spr(sprite, box_x, box_y)
- print('mget: '..mget(7,3), 64, 0)
+ spr(box.sprite, box.x, box.y)
+ --print('mget: '..mget(7,3), 64, 0)
  --print( solid(box_x, box_y), 64, 16)
- print('map x: '..map_x, 32, 100 )
- print('map y: '..map_y, 85, 100 )
+ print('mget: '..mget(box.x / 8, box.y / 8), 32, 100 )
+ --print('y: '..box.y / 8, 85, 100 )
 end
 
 function _update()
- if btnp(0) 
-  then  box_x -= 8 
-    map_x -= 1 
- end 
- if btnp(1) 
-  then box_x += 8
-  map_x += 1 
- end
- if btnp(2) 
-  then box_y -= 8
-  map_y -= 1 
- end
- if btnp(3) 
-  then box_y += 8
-  map_y += 1 
- end
- check_location(box_x, box_y)
- --print( solid(0, 0))
+  move_actor(box) 
+
+ check_location(box)
 end
 __gfx__
 bbbbbbbb08080808aa0000aacccccccc999999990000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
