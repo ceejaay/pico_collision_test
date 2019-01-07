@@ -2,14 +2,6 @@ pico-8 cartridge // http://www.pico-8.com
 version 16
 __lua__
 
-function master_timer
-  local tick = 0
-  tick += 1
-  if tick >= 30 
-  then tick = 0
-  end
-  return tick
-end
 
 box = {}
 man = {}
@@ -22,6 +14,7 @@ man.sprites = {6, 7, 8}
 box.sprite = 0
 box.x = 0
 box.y = 0
+velocity = 0
 
 
 
@@ -29,18 +22,33 @@ map_x = 0
 map_y = 0
 
 
+function solid(x, y)
+  val=mget(x, y)
+  return fget(val, 0)
+end
+
+function solid_area(x, y, w, h)
+  return
+    solid(x-w, y-h) or
+    solid(x+w, y-h) or
+    solid(x-w, y+h) or
+    solid(x+w, y+h)
+end
+
 function move_actor(actor)
-  if btnp(0)
-    then actor.x -= 8
+  
+
+  if btn(0)
+    then actor.x -= velocity 
   end
-  if btnp(1)
-    then actor.x += 8
+  if btn(1)
+    then actor.x += velocity
   end
-  if btnp(2)
-    then actor.y -= 8
+  if btn(2)
+    then actor.y -= velocity
   end
-  if btnp(3)
-    then actor.y += 8
+  if btn(3)
+    then actor.y += velocity
   end
 end
 
@@ -68,10 +76,9 @@ function _draw()
  spr(box.sprite, box.x, box.y)
  spr(man.sprites[1], man.x, man.y)
  --print('mget: '..mget(7,3), 64, 0)
- --print( solid(box_x, box_y), 64, 16)
- --print('mget: '..mget(box.x / 8, box.y / 8), 32, 100 )
- print('tick: '..man.tick, 32, 100 )
- --print('y: '..box.y / 8, 85, 100 )
+ print(solid(man.x / 8, man.y / 8), 32, 100 )
+ --print('man x : '..man.x / 8, 32, 100 )
+ --print('y: '..man.y / 8, 85, 100 )
 end
 
 function _update()
